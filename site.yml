@@ -1,5 +1,12 @@
 ---
 # file: site.yml
+
+# A noop to trigger fact collection
+- hosts: all
+  tasks:
+    - name: gtfo
+      file: path=/etc/hosts state=touch
+
 - include: controller.yml
 - include: network.yml
 - include: compute.yml
