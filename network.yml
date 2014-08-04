@@ -1,0 +1,6 @@
+---
+- hosts: network
+  roles:
+    - common
+    - network
+
