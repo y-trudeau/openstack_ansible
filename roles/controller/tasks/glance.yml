@@ -25,7 +25,7 @@
 - name: write the glance-api config file
   template: src=glance-api.conf.j2 dest=/etc/glance/glance-api.conf owner=root group=root mode=0644
   notify:
-    - restart glace-api
+    - restart glance-api
 
 - name: write the glance-registry config file
   template: src=glance-registry.conf.j2 dest=/etc/glance/glance-registry.conf owner=root group=root mode=0644
