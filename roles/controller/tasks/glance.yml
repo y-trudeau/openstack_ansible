@@ -1,0 +1,27 @@
+---
+
+- name: glance package
+  apt: pkg={{ item }} state=installed
+  tags: glance
+  with_items:
+    - glance
+    - python-glanceclient
+
+- name: remove old sqlite db file
+  file: path=/var/lib/glance/glance.sqlite state=absent
+
+- name: create glance database
+  mysql_db: name=glance state=present
+
+- name: glance user from 127.0.0.1
+  mysql_user: name=glance password={{ GLANCE_DBPASS }} host='127.0.0.1' priv=glance.*:ALL state=present
+
+- name: glance user from localhost
+  mysql_user: name=glance password={{ GLANCE_DBPASS }} host='localhost' priv=glance.*:ALL state=present
+
+- name: keystone user from %
+  mysql_user: name=glance password={{ GLANCE_DBPASS }} host='%' priv=glance.*:ALL state=present
+
+- name: glance db_sync
+  shell: su -s /bin/sh -c "glance-manage db_sync" glance
+
