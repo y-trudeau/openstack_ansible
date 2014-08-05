@@ -78,4 +78,4 @@
 
 - name: create service tenant
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone tenant-create --name=service --description="Service Tenant"
-  when: keystone_tenant_list_result.stdout.find('service')
+  when: keystone_tenant_list_result.stdout.find('service') == -1
