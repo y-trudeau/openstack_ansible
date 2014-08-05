@@ -1,0 +1,24 @@
+[DEFAULT]
+state_path = /var/lib/neutron
+lock_path = $state_path/lock
+core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
+notification_driver = neutron.openstack.common.notifier.rpc_notifier
+core_plugin = ml2
+service_plugins = router
+allow_overlapping_ips = True
+[quotas]
+[agent]
+root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+[keystone_authtoken]
+auth_host = 127.0.0.1
+auth_port = 35357
+auth_protocol = http
+admin_tenant_name = admin
+admin_user = admin
+admin_password = {{ ADMIN_PASS }}
+signing_dir = $state_path/keystone-signing
+[database]
+connection = mysql://neutron:{{ NEUTRON_DBPASS }}@{{ ansible_hostname }}/neutron
+[service_providers]
+service_provider=LOADBALANCER:Haproxy:neutron.services.loadbalancer.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default
