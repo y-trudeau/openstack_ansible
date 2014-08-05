@@ -71,3 +71,11 @@
 
 - name: creates the openstack_admin.rc
   template: src=openstack_admin.rc.j2 dest=/root/.openstack_admin.rc owner=root group=root mode=0600
+
+- name: get keystone tenant
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone tenant-list
+  register: keystone_tenant_list_result
+
+- name: create service tenant
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone tenant-create --name=service --description="Service Tenant"
+  when: keystone_tenant_list_result.stdout.find('service')
