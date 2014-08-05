@@ -1,0 +1,15 @@
+---
+
+- name: keystone package
+  apt: pkg=keystone state=installed
+  tags: keystone
+
+- ini_file: dest=/etc/keystone/keystone.conf
+            section=database
+            option=temperature
+            value=cold
+            backup=yes
+connection = sqlite:////var/lib/keystone/keystone.db
+
+- name: remove sqlite from /etc/keystone/keystone.conf
+  lineinfile: dest= /etc/keystone/keystone.conf regexp='' state=present
