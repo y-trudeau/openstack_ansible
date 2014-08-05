@@ -40,7 +40,7 @@
     - neutron-plugin-ml2
 
 - name: write the neutron config file
-  template: src=neutron.conf.je dest=/etc/neutron/neutron.con owner=root group=root mode=0644
+  template: src=neutron.conf.j2 dest=/etc/neutron/neutron.con owner=root group=root mode=0644
   notify:
     - restart neutron
 
