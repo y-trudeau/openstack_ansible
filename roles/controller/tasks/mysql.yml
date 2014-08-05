@@ -27,3 +27,9 @@
   
 - name: Start Percona server
   service: name=mysql state=started enabled=true
+
+- name: remove localhost anonymous user
+  mysql_user: name='' host='localhost' state=absent
+
+- name: remove anonymous user with hostname
+  mysql_user: name='' host={{ ansible_hostname }} state=absent

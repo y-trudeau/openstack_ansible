@@ -644,12 +644,12 @@ connection = mysql://glance:{{ GLANCE_DBPASS }}@{{ ansible_default_ipv4.address 
 #db_max_retries = 20
 
 [keystone_authtoken]
-auth_host = 127.0.0.1
+auth_host = {{ ansible_default_ipv4.address }}
 auth_port = 35357
 auth_protocol = http
-admin_tenant_name = %SERVICE_TENANT_NAME%
-admin_user = %SERVICE_USER%
-admin_password = %SERVICE_PASSWORD%
+admin_tenant_name = admin
+admin_user = admin
+admin_password = {{ KEYSTONE_ADMIN_PASS }}
 
 [paste_deploy]
 # Name of the paste configuration file that defines the available pipelines
