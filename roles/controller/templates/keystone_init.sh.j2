@@ -3,7 +3,7 @@
 export OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}"
 export OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0
 
-if [ k`keystone user-list` == 'k' ]
+if [[ k`keystone user-list` == 'k' ]]
 then
   keystone user-create --name=admin --pass={{ KEYSTONE_ADMIN_PASS }} --email=root@localhost
   keystone role-create --name=admin
