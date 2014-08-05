@@ -4,7 +4,7 @@
 - name: Mysql | Set root repassword
   shell: cat 'mysql-server mysql-server/root_password_again {{ MYSQL_ROOT_PASS }}' | debconf-set-selections
 
-- name: write the apache config file
+- name: write the mysql config file
   template: src=my.cnf.j2 dest=/etc/mysql/my.cnf owner=root group=root mode=0644
   notify:
     - restart mysql

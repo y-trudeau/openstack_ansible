@@ -4,12 +4,10 @@
   apt: pkg=keystone state=installed
   tags: keystone
 
-- ini_file: dest=/etc/keystone/keystone.conf
-            section=database
-            option=temperature
-            value=cold
-            backup=yes
-connection = sqlite:////var/lib/keystone/keystone.db
+- name: write the keystone config file
+  template: src=keystone.conf.j2 dest=/etc/keystone/keystone.conf owner=root group=root mode=0644
+  notify:
+    - restart keystone
 
-- name: remove sqlite from /etc/keystone/keystone.conf
-  lineinfile: dest= /etc/keystone/keystone.conf regexp='' state=present
+- name: remove old sqlite db file
+  file: /var/lib/keystone/keystone.db state=absent
