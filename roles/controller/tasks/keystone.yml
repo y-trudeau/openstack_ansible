@@ -24,5 +24,11 @@
 - name: keystone user from %
   mysql_user: name=keystone password={{ KEYSTONE_DBPASS }} host='%' priv=keystone.*:ALL state=present
 
+- name: remove localhost anonymous user
+  mysql_user: name='' host='localhost' state=absent
+
+- name: remove anonymous user with hostname
+  mysql_user: name='' host={{ ansible_hostname }} state=absent
+
 - name: keystone db_sync
   shell: su -s /bin/sh -c "keystone-manage db_sync" keystone
