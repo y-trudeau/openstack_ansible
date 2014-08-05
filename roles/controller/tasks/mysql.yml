@@ -4,6 +4,11 @@
 - name: Mysql | Set root repassword
   shell: cat 'mysql-server mysql-server/root_password_again {{ MYSQL_ROOT_PASS }}' | debconf-set-selections
 
+- name: write the apache config file
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf owner=root group=root mode=0644
+  notify:
+    - restart mysql
+
 - name: percona apt key
   apt_key: id=1C4CBDCDCD2EFD2A url='http://www.percona.com/redir/downloads/RPM-GPG-KEY-percona' state=present
   tags: percona_repo

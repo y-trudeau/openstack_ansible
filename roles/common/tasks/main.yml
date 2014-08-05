@@ -14,4 +14,15 @@
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
 
+# All passwords
 - include_vars: group_vars/openstack_password.yml
+
+# required packages
+- name: python-mysqldb package
+  apt: pkg=python-mysqldb state=installed
+  tags: python-mysqldb
+  
+- name: python-software-properties package
+  apt: pkg=python-software-properties state=installed
+  tags: python-software-properties
+  
