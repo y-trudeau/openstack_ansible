@@ -19,13 +19,22 @@
 - name: create neutron user
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=neutron --pass={{ NEUTRON_PASS }} --email neutron@localhost
   when: keystone_user_list_result.stdout.find('neutron') == -1
-  
 
-  
+- name: get keystone endpoints
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-list 
+  register: keystone_endpoint_list_result
+
+- name: get keystone neutron service id
+  shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list | awk '/ network / {print $2}'
+  register: keystone_neutron_service_id
+
+- name: create keystone endpoint
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-create --service-id={{ keystone_neutron_service_id.stdout }} --publicurl=http://{{ ansible_hostname }}:9696 --internalurl=http://{{ ansible_hostname }}:9696 --adminurl=http://{{ ansible_hostname }}:9696
+  when: keystone_endpoint_list_result.stdout.find(keystone_neutron_service_id.stdout) == -1
 
 - name: neutron package
   apt: pkg={{ item }} state=installed
   tags: neutron
   with_items:
-    - neutron
-    - python-neutronclient
+    - neutron-server
+    - neutron-plugin-ml2
