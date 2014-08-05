@@ -19,7 +19,7 @@
 - name: glance user from localhost
   mysql_user: name=glance password={{ GLANCE_DBPASS }} host='localhost' priv=glance.*:ALL state=present
 
-- name: keystone user from %
+- name: glance user from %
   mysql_user: name=glance password={{ GLANCE_DBPASS }} host='%' priv=glance.*:ALL state=present
 
 - name: write the glance-api config file

@@ -1,0 +1,31 @@
+---
+
+- name: create neutron database
+  mysql_db: name=neutron state=present
+
+- name: neutron user from 127.0.0.1
+  mysql_user: name=neutron password={{ NEUTRON_DBPASS }} host='127.0.0.1' priv=neutron.*:ALL state=present
+
+- name: neutron user from localhost
+  mysql_user: name=neutron password={{ NEUTRON_DBPASS }} host='localhost' priv=neutron.*:ALL state=present
+
+- name: neutron user from %
+  mysql_user: name=neutron password={{ NEUTRON_DBPASS }} host='%' priv=neutron.*:ALL state=present
+
+- name: get keystone users
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-list 
+  register: keystone_user_list_result
+
+- name: create neutron user
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=neutron --pass={{ NEUTRON_PASS }} --email neutron@localhost
+  when: keystone_user_list_result.stdout.find('neutron') == -1
+  
+
+  
+
+- name: neutron package
+  apt: pkg={{ item }} state=installed
+  tags: neutron
+  with_items:
+    - neutron
+    - python-neutronclient
