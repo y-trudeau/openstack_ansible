@@ -37,3 +37,11 @@
   
 - name: cron job to flush the old tokens
   cron: name="keystone_flush" user=keystone state=present minute=1 job="/usr/bin/keystone-manage token_flush >/var/log/keystone/keystone-tokenflush.log 2>&1"
+
+- name: render keystone init template
+  template: src=keystone_init.sh.j2 dest=/var/tmp/keystone_init.sh owner=root group=root mode=0755
+
+- name: initialize keystone
+  shell: /var/tmp/keystone_init.sh
+
+- file: path=/var/tmp/keystone_init.sh state=absent
