@@ -47,5 +47,5 @@
 - name: write the neutron-ml2 config file
   template: src=ml2_conf.ini.j2 dest=/etc/neutron/plugins/ml2/ml2_conf.ini owner=root group=root mode=0644
   notify:
-    - restart neutron
+    - restart neutron-server
 

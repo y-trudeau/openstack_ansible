@@ -1,0 +1,5 @@
+# External interface to reach the outside world
+EXT_INTERFACE: eth0
+
+# Tunnel interface
+TUN_INTERFACE: eth1

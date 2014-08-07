@@ -29,3 +29,15 @@
 
 - name: restart nova-novncproxy
   service: name=nova-novncproxy state=restarted
+
+- name: restart neutron-server
+  service: name=neutron-server state=restarted
+  
+- name: restart nova-all
+  service: name={{ item }} state=restarted
+  with_items:
+    - nova-api
+    - nova-cert
+    - nova-consoleauth
+    - nova-scheduler
+    - nova-novncproxy

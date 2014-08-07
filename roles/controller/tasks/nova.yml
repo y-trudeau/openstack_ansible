@@ -14,6 +14,10 @@
 
 - name: remove old sqlite db file
   file: path=/var/lib/nova/nova.sqlite state=absent
+  
+- name: write the nova config file
+  template: src=nova.conf.j2 dest=/etc/nova/nova.conf owner=root group=root mode=0644
+  notify: restart nova-all
 
 - name: create nova database
   mysql_db: name=nova state=present
@@ -57,10 +61,4 @@
 - name: create keystone endpoint
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-create --service-id={{ keystone_nova_service_id.stdout }} --publicurl=http://{{ ansible_hostname }}:8774 --internalurl=http://{{ ansible_hostname }}:8774 --adminurl=http://{{ ansible_hostname }}:8774
   when: keystone_endpoint_list_result.stdout.find(keystone_nova_service_id.stdout) == -1
-  notify:
-    - restart nova-api
-    - restart nova-cert
-    - restart nova-consoleauth
-    - restart nova-scheduler
-    - restart nova-conductor
-    - restart nova-novncproxy
+  notify: restart nova-all

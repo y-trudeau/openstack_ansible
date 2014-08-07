@@ -17,6 +17,9 @@
 # All passwords
 - include_vars: group_vars/openstack_password.yml
 
+# Site variables
+- include_vars: group_vars/site_def.yml
+
 # required packages
 - name: python-mysqldb package
   apt: pkg=python-mysqldb state=installed
