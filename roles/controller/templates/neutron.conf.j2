@@ -1,22 +1,36 @@
 [DEFAULT]
-state_path = /var/lib/neutron
-lock_path = $state_path/lock
-core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
-notification_driver = neutron.openstack.common.notifier.rpc_notifier
+
 core_plugin = ml2
 service_plugins = router
 allow_overlapping_ips = True
-[quotas]
-[agent]
-root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+
+auth_strategy = keystone
+
+rpc_backend = neutron.openstack.common.rpc.impl_kombu
+rabbit_host = controller
+rabbit_password = {{ RABBIT_PASS }}
+
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
+nova_url = http://controller:8774/v2
+nova_admin_username = nova
+nova_admin_tenant_id = {{ keystone_service_tenant_id.stdout }}
+nova_admin_password = {{ NOVA_PASS }}
+nova_admin_auth_url = http://controller:35357/v2.0
+
 [keystone_authtoken]
-auth_host = 127.0.0.1
-auth_port = 35357
+auth_uri = http://controller:5000
+auth_host = controller
 auth_protocol = http
-admin_tenant_name = admin
-admin_user = admin
-admin_password = {{ ADMIN_PASS }}
-signing_dir = $state_path/keystone-signing
+auth_port = 35357
+admin_tenant_name = service
+admin_user = neutron
+admin_password = {{ NEUTRON_PASS }}
+
+[quotas]
+#[agent]
+#root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+
 [database]
 connection = mysql://neutron:{{ NEUTRON_DBPASS }}@{{ ansible_hostname }}/neutron
 [service_providers]

@@ -20,15 +20,23 @@
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=neutron --pass={{ NEUTRON_PASS }} --email neutron@localhost
   when: keystone_user_list_result.stdout.find('neutron') == -1
 
+- name: get keystone services
+  shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list 
+  register: keystone_neutron_service_list
+  
+- name: create neutron keyston service id
+  shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-create --name neutron --type network --description "OpenStack Networking"
+  when: keystone_neutron_service_list.stdout.find('network') == -1
+
+- name: get keystone neutron service-id
+  shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list | awk '/ network / {print $2}' 
+  register: keystone_neutron_service_id
+  
 - name: get keystone endpoints
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-list 
   register: keystone_endpoint_list_result
-
-- name: get keystone neutron service id
-  shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list | awk '/ network / {print $2}'
-  register: keystone_neutron_service_id
-
-- name: create keystone endpoint
+  
+- name: create keystone neutron endpoint
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-create --service-id={{ keystone_neutron_service_id.stdout }} --publicurl=http://{{ ansible_hostname }}:9696 --internalurl=http://{{ ansible_hostname }}:9696 --adminurl=http://{{ ansible_hostname }}:9696
   when: keystone_endpoint_list_result.stdout.find(keystone_neutron_service_id.stdout) == -1
 
@@ -38,6 +46,11 @@
   with_items:
     - neutron-server
     - neutron-plugin-ml2
+
+- name: get keystone service tenant id
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone tenant-get service |  awk '/ id / {print $4}'
+  register: keystone_service_tenant_id
+
 
 - name: write the neutron config file
   template: src=neutron.conf.j2 dest=/etc/neutron/neutron.conf owner=root group=root mode=0644
