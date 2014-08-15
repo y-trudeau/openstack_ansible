@@ -42,13 +42,9 @@
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=nova --pass={{ NOVA_PASS }} --email nova@localhost
   when: keystone_user_list_result.stdout.find('nova') == -1
   
-- name: get keystone role applied to user nova
-  shell: OS_USERNAME=nova OS_PASSWORD={{ NOVA_PASS }} OS_AUTH_URL=http://controller:5000/v2.0 OS_TENANT_NAME=service keystone user-role-list
-  register: keystone_nova_roles
-
-- name: add role admin to user neutron
-  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user nova --tenant service --role admin
-  when: keystone_nova_roles.stdout.find('admin') == -1
+- name: get keystone role return value (nova)
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user=nova --tenant=service --role=admin
+  ignore_errors: true
 
 - name: get keystone services
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list
