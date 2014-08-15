@@ -66,3 +66,18 @@
   notify:
     - restart neutron-server
 
+- name: get current neutron nets
+  shell: . /root/.openstack_admin.rc ; neutron net-list | grep {{ EXT_NET_NAME }} | wc -l
+  register: ext_net_exists
+
+- name: create ext net
+  shell: . /root/.openstack_admin.rc ; neutron net-create {{ EXT_NET_NAME }} --shared --router:external=True
+  when: ext_net_exists.stdout == "0"
+
+- name: get current neutron subnets
+  shell: . /root/.openstack_admin.rc ; neutron subnet-list | grep {{ EXT_SUBNET_NAME }} | wc -l
+  register: ext_subnet_exists
+
+- name: create neutron subnet
+  shell: . /root/.openstack_admin.rc neutron subnet-list --name {{ EXT_SUBNET_NAME }} --allocation-pool start={{ EXT_FLOATING_IP_START }},end={{ EXT_FLOATING_IP_END }} --disable-dhcp --gateway {{ EXT_NETWORK_GATEWAY }} {{ EXT_NETWORK_CIDR }}
+  when: ext_subnet_exists.stdout == "0"
