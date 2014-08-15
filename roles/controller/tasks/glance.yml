@@ -66,9 +66,6 @@
 - name: create keystone endpoint
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-create --service-id={{ keystone_glance_service_id.stdout }} --publicurl=http://{{ ansible_hostname }}:9292 --internalurl=http://{{ ansible_hostname }}:9292 --adminurl=http://{{ ansible_hostname }}:9292
   when: keystone_endpoint_list_result.stdout.find(keystone_glance_service_id.stdout) == -1
-
-- name: some sleep before glance restart
-  command: sleep 5
   notify:
     - restart glance-api
     - restart glance-registry

@@ -65,7 +65,4 @@
 - name: create keystone endpoint
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-create --service-id={{ keystone_nova_service_id.stdout }} --publicurl=http://{{ ansible_hostname }}:8774/v2/%\(tenant_id\)s --internalurl=http://{{ ansible_hostname }}:8774/v2/%\(tenant_id\)s --adminurl=http://{{ ansible_hostname }}:8774/v2/%\(tenant_id\)s
   when: keystone_endpoint_list_result.stdout.find(keystone_nova_service_id.stdout) == -1
-  
-- name: some sleep before nova restart
-  command: sleep 5
   notify: restart nova-all
