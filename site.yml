@@ -8,6 +8,8 @@
       file: path=/etc/hosts state=touch
     - name: apt-get update
       apt: update_cache=yes
+    - name: apt-get upgrade
+      apt: upgrade=yes state=latest
 
 - include: controller.yml
 - include: network.yml
