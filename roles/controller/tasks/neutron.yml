@@ -25,7 +25,7 @@
   register: keystone_neutron_roles
 
 - name: add role admin to user neutron
-  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0keystone user-role-add --user neutron --tenant service --role admin
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user neutron --tenant service --role admin
   when: keystone_neutron_roles.stdout.find('admin') == -1
   
 - name: get keystone services
