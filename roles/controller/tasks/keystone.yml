@@ -94,3 +94,4 @@
   
 - name: add role admin to user demo
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user demo --tenant demo --role admin
+  ignore_errors: True
