@@ -92,11 +92,5 @@
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=demo --pass=demo --email demo@localhost
   when: keystone_user_list_result.stdout.find('demo') == -1
   
-- name: get keystone role applied to user demo
-  shell: OS_USERNAME=demo OS_PASSWORD=demo OS_AUTH_URL=http://controller:5000/v2.0 OS_TENANT_NAME=demo keystone user-role-list
-  register: keystone_nova_roles_demo
-  ignore_errors: True
-
-- name: add role admin to user neutron
+- name: add role admin to user demo
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user demo --tenant demo --role admin
-  when: keystone_nova_roles_demo.rc == 1

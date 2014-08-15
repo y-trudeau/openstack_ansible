@@ -10,7 +10,6 @@
     - neutron-plugin-ml2 
     - neutron-plugin-openvswitch-agent 
     - neutron-common
-    - openvswitch-datapath-dkms
 
 - name: nova compute node packages
   apt: pkg={{ item }} state=installed
