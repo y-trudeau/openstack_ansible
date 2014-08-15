@@ -9,3 +9,10 @@ EXT_NETWORK_CIDR: 10.3.5.0/24
 
 # Tunnel interface
 TUN_INTERFACE: eth1
+
+# Demo tenant name
+DEMO_NET_NAME: demo-net
+DEMO_SUBNET_NAME: demo-subnet
+DEMO_GATEWAY: 172.30.11.254
+DEMO_CIDR: 172.30.11.0/24
+DEMO_ROUTER: demo-router

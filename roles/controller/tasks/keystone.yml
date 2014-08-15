@@ -72,6 +72,9 @@
 - name: creates the openstack_admin.rc
   template: src=openstack_admin.rc.j2 dest=/root/.openstack_admin.rc owner=root group=root mode=0600
 
+- name: creates the openstack_demo.rc
+  template: src=openstack_demo.rc.j2 dest=/root/.openstack_demo.rc owner=root group=root mode=0600
+
 - name: get keystone tenant list
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone tenant-list
   register: keystone_tenant_list_result
