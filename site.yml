@@ -6,6 +6,8 @@
   tasks:
     - name: gtfo
       file: path=/etc/hosts state=touch
+    - name: apt-get update
+      apt: update_cache=yes
 
 - include: controller.yml
 - include: network.yml
