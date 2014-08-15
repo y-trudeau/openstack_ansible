@@ -19,14 +19,6 @@
 - name: create neutron user
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-create --name=neutron --pass={{ NEUTRON_PASS }} --email neutron@localhost
   when: keystone_user_list_result.stdout.find('neutron') == -1
-
-- name: get keystone role applied to user neutron
-  shell: OS_USERNAME=neutron OS_PASSWORD={{ NEUTRON_PASS }} OS_AUTH_URL=http://controller:5000/v2.0 OS_TENANT_NAME=service keystone user-role-list
-  register: keystone_neutron_roles
-
-- name: add role admin to user neutron
-  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user neutron --tenant service --role admin
-  when: keystone_neutron_roles.stdout.find('admin') == -1
   
 - name: get keystone services
   shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list 
@@ -39,6 +31,10 @@
 - name: get keystone neutron service-id
   shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list | awk '/ network / {print $2}' 
   register: keystone_neutron_service_id
+
+- name: get keystone role return value (neutron)
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user=neutron --tenant=service --role=admin
+  ignore_errors: true
   
 - name: get keystone endpoints
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-list 

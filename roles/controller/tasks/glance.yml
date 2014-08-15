@@ -55,6 +55,10 @@
   shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone endpoint-list 
   register: keystone_endpoint_list_result
 
+- name: get keystone role return value (glance)
+  shell: OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone user-role-add --user=glance --tenant=service --role=admin
+  ignore_errors: true
+
 - name: get keystone glance service id
   shell:  OS_SERVICE_TOKEN="{{ KEYSTONE_ADMIN_TOKEN }}" OS_SERVICE_ENDPOINT=http://{{ ansible_hostname }}:35357/v2.0 keystone service-list | awk '/ image / {print $2}'
   register: keystone_glance_service_id
