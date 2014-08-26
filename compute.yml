@@ -1,6 +1,0 @@
----
-- hosts: compute
-  roles:
-    - common
-    - compute
-

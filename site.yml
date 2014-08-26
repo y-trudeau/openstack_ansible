@@ -11,6 +11,18 @@
     - name: apt-get upgrade
       apt: upgrade=yes state=latest
 
-- include: controller.yml
-- include: network.yml
-- include: compute.yml
+- include: controller_init.yml
+- include: compute_init.yml
+- include: network_init.yml
+- include: controller_nova.yml
+- include: compute_nova.yml
+- include: controller_neutron.yml
+- include: compute_neutron.yml
+- include: network_neutron.yml
+- include: initial_networks.yml
+- include: controller_dashboard.yml
+- include: controller_cinder.yml
+- include: service_cinder.yml
+- include: controller_heat.yml
+- include: controller_ceilometer.yml
+- include: compute_ceilometer.yml
