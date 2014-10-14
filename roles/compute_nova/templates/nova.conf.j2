@@ -26,6 +26,8 @@ vncserver_listen = 0.0.0.0
 vncserver_proxyclient_address = {{ ansible_eth0.ipv4.address }}
 novncproxy_base_url = http://controller:6080/vnc_auto.html
 
+compute_driver = nova.virt.fake.FakeDriver
+
 glance_host = controller
 
 network_api_class = nova.network.neutronv2.api.API

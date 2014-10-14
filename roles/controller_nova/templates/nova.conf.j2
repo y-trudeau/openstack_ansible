@@ -26,8 +26,13 @@ linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 security_group_api = neutron
 
+compute_driver = nova.virt.fake.FakeDriver
+
 service_neutron_metadata_proxy = true
 neutron_metadata_proxy_shared_secret = {{ METADATA_SECRET }}
+
+ram_allocation_ratio = 100000
+cpu_allocation_ratio = 100000
 
 [database]
 connection = mysql://nova:{{ NOVA_DBPASS }}@{{ ansible_hostname }}/nova

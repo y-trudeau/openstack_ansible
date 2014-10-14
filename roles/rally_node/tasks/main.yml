@@ -75,10 +75,18 @@
 - name: execute rally deployment check
   shell: rally deployment check 
 
-- name: render rally task
+- name: render rally boot_and_delete_server
   template: 
     src: boot_and_delete_server.json.j2
-    dest: /var/tmp/my_task.json
+    dest: /var/tmp/boot_and_delete_server.json
+    owner: root
+    group: root
+    mode: 0644
+
+- name: render rally boot_server
+  template:
+    src: boot_server.json.j2
+    dest: /var/tmp/boot_server.json
     owner: root
     group: root
     mode: 0644

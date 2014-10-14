@@ -6,10 +6,10 @@
     - eth2
 
 - name: check route to tenant network
-  shell: route -n | grep "192.168.101.0"
+  shell: route -n | grep "172.18.0.0"
   register: route_to_tenant_network
   ignore_errors: true
 
 - name: add routes to the tenant network
-  shell: route add -net 192.168.101.0 netmask 255.255.255.0 gateway 192.168.100.100
+  shell: route add -net 172.18.0.0 netmask 255.255.0.0 gateway 172.17.100.2
   when: route_to_tenant_network.rc != 0 
